@@ -288,7 +288,7 @@ var robotcode;
     ;
 })(robotcode || (robotcode = {}));
 /// <reference path="robotcode.ts" />
-/// <reference path="lib/tweenjs.d.ts" />
+/// <reference path="../lib/tweenjs.d.ts" />
 var actions;
 (function (actions) {
     function setCellColor(grid, x, y, color) {

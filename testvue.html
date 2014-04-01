@@ -7,10 +7,15 @@
 
 		</style>
 
-		<script type="text/javascript" src="lib/vue2.js"></script>
+		<script type="text/javascript" src="lib/vue.js"></script>
 	</head>
 	<body>
-		<div id="loop">
+		<ul class="fruits">
+			<li v-repeat='fruit: fruits'>
+			    <fruit v-with='options: fruit'></fruit>
+			</li>
+		<ul>
+		<!-- <div id="loop">
 			<div v-repeat="iterate(begin, end)">
 				{{$value}}
 			</div>
@@ -21,9 +26,23 @@
 					{{cell}}
 				</td>
 			</tr>
-		</table>
+		</table> -->
 		<script type="text/javascript">
-			var grid = new Vue({
+			Vue.component("tag-fruit", {
+				template: "<div class='fruit'>Type: {{ options.type }}Color: {{ options.color }}</div>"
+			});
+
+			var fruits = new Vue({
+				el: ".fruits",
+				data: {
+					fruits: [
+						{type: "banana", color: "yellow"},
+						{type: "orange", color: "orange"},
+					],
+				}
+			}); 
+
+			/*var grid = new Vue({
 				el: "#grid",
 				data: {
 					cells: [
@@ -52,7 +71,7 @@
 						return result;
 					}
 				}
-			}) 
+			}) */
 		</script>
 	</body>
 </html>

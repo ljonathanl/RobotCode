@@ -2,151 +2,7 @@
 	<head>
 		<title>RobotCode</title>
 
-		<style type="text/css">
-		.cell {
-			width: 60px;
-			height: 60px;
-			border: 1px solid #000;
-			box-sizing: border-box;	
-		}
-
-		.robot {
-			position: absolute;
-			box-sizing: border-box;	
-			background-image: url('images/robot.png');
-			width: 60px;
-			height: 60px;
-		}
-
-		.action {
-			box-sizing: border-box;	
-			width: 120px;
-			min-height: 60px;
-		}
-
-		.container {
-			box-sizing: border-box;	
-			width: 120px;
-			min-height: 60px;
-			background-color: #CCC;
-			border: 1px solid black;
-		}
-
-		.script .action {
-			display: block;
-		}
-
-		.executing {
-			border: 4px solid #0F0;
-		}
-
-		.up {
-			background-image: url('images/up.png');
-		}
-
-		.down {
-			background-image: url('images/down.png');
-		}
-
-		.left {
-			background-image: url('images/left.png');
-		}
-
-		.right {
-			background-image: url('images/right.png');
-		}
-
-		.colorRed {
-			background-color: #FF0000;
-		}
-
-		.colorGreen {
-			background-color: #00FF00;
-		}
-
-		.repeat3Times {
-			background-color: #0000FF;
-		}
-
-		.placeHolder {
-			opacity: 0.2;
-		}
-
-		.grid {
-			position: relative;
-		}
-
-		.script {
-			border: 1px solid #000;
-		}
-
-		.actions {
-			border: 1px solid #000;
-		}
-
-		.controlBoard {
-			border: 1px solid #000;
-		}
-
-		.control {
-			box-sizing: border-box;	
-			width: 60px;
-			height: 60px;
-		}
-
-		.play {
-			background-image: url('images/play.png');
-		}
-
-		.pause {
-			background-image: url('images/pause.png');
-		}
-
-		.stop {
-			background-image: url('images/stop.png');
-		}
-
-		.clear {
-			background-image: url('images/clear.png');
-		}
-
-		.availableActions {
-			border: 1px solid #000;
-		}
-
-		td {
-			margin: 0;
-			padding: 0;
-		}
-
-		table {
-			border-spacing: 0px;
-		}
-
-		body {
-			background-color: #CCC;
-		}
-
-
-		.gridContainer {
-			width: 60%;
-			position: absolute;
-			left: 0;
-		}
-
-		.scriptContainer {
-			width: 40%;
-			position: absolute;
-			right: 0;
-		}
-
-		.garbage {
-			border: 1px solid #000;
-			min-height: 50px;
-		}
-
-		</style>
-
+		<link rel="stylesheet" type="text/css" href="styles/robotcode.css">
 		<script type="text/javascript" src="lib/Event.js"></script>
 		<script type="text/javascript" src="lib/EventDispatcher.js"></script>
 		<script type="text/javascript" src="lib/Ticker.js"></script>
@@ -208,6 +64,7 @@
 				</button>
 			</div>
 			<div class="garbage" v-sortable data-group="actions">
+				GARBAGE !!!
 			</div>
 			<div 
 				class="script"
@@ -236,6 +93,6 @@
 			</div>
 		</div>	
 		
-		<script type="text/javascript" src="index.js"></script>
+		<script type="text/javascript" src="javascripts/robotcode.js"></script>
 	</body>
 </html>
