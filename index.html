@@ -20,8 +20,8 @@
 				<tr v-repeat="j: range(0, height)">
 					<td v-repeat="i: range(0, width)">
 						<div 
-							class="cell" 
-							v-style="background-color: cells[i][j].color">
+							class="cell"
+							v-class="cells[i][j].state">
 						</div>
 					</td>
 				</tr>

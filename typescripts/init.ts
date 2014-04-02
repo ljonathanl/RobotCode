@@ -5,23 +5,25 @@
 declare var Vue:any;
 declare var Sortable:any;
 var gridValue = {
-	colors: 
+	states: 
 	{ 
-		"B": "#000000",
-		"W": "#CCCCCC",
+		"H": "hole",
+		"N": "none",
+		"1": "color1",
+		"2": "color2",
 	},
 	grid:
 	[
-		"WWWWWBBBWW",
-		"WBWWWWWWWW",
-		"WWWWWBWWWW",
-		"WWWWWWWWWB",
-		"WWWBWWWWWW",
-		"WWWWWWWWWB",
-		"WWWWWWWWWW",
-		"WWWBBWWWWW",
-		"WWWWWBWWWW",
-		"WWWWWWWWWW"
+		"NNNNNHHHNN",
+		"NHNN11NNNN",
+		"NNNNNHNNNN",
+		"NNNNNNNNNH",
+		"NNNHNNNNNN",
+		"N21NNNNNNH",
+		"NNNNN2NNNN",
+		"NNNHHNNNNN",
+		"NNNNNHNNNN",
+		"NNNNNNN1NN"
 	]
 }
 
@@ -59,9 +61,9 @@ var availableActions = new robotcode.AvailableActions(
 		actions.down,
 		actions.left,
 		actions.right,
-		actions.colorRed,
-		actions.colorGreen,
-		actions.ifRed,
+		actions.stateColor1,
+		actions.stateColor2,
+		actions.ifColor1,
 		actions.repeat3Times,
 	]);
 

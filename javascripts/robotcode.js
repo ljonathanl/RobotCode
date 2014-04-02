@@ -203,7 +203,7 @@ var robotcode;
             cells[i] = [];
             for (var j = 0; j < grid.height; ++j) {
                 var cell = new Cell();
-                cell.color = gridValue.colors[gridValue.grid[j][i]];
+                cell.state = gridValue.states[gridValue.grid[j][i]];
                 cells[i][j] = cell;
             }
         }
@@ -321,25 +321,25 @@ var robotcode;
 /// <reference path="../lib/tweenjs.d.ts" />
 var actions;
 (function (actions) {
-    function setCellColor(grid, x, y, color) {
+    function setCellState(grid, x, y, state) {
         var cell = grid.cells[x][y];
         if (cell) {
-            cell.color = color;
+            cell.state = state;
         }
     }
 
-    function getCellColor(grid, x, y) {
+    function getCellState(grid, x, y) {
         var result = null;
         var cell = grid.cells[x][y];
         if (cell) {
-            result = cell.color;
+            result = cell.state;
         }
         return result;
     }
 
     function canMove(grid, x, y) {
         if (x >= 0 && x < grid.width && y >= 0 && y < grid.height) {
-            return grid.cells[x][y].color != "#000000";
+            return grid.cells[x][y].state != "hole";
         }
         return false;
     }
@@ -370,12 +370,12 @@ var actions;
         };
     };
 
-    var color = function (color) {
+    var state = function (state) {
         return function (context, callback) {
             var world = context.get("world");
             var robot = world.robot;
             var grid = world.grid;
-            setCellColor(grid, robot.x, robot.y, color);
+            setCellState(grid, robot.x, robot.y, state);
             setTimeout(callback, 500);
         };
     };
@@ -403,8 +403,8 @@ var actions;
         var world = context.get("world");
         var robot = world.robot;
         var grid = world.grid;
-        var color = getCellColor(grid, robot.x, robot.y);
-        if (color == "#FF0000") {
+        var state = getCellState(grid, robot.x, robot.y);
+        if (state == "#FF0000") {
             context.set("executeChildren", true);
         }
 
@@ -415,40 +415,42 @@ var actions;
     actions.down = new robotcode.Action("down", "move down");
     actions.left = new robotcode.Action("left", "move left");
     actions.right = new robotcode.Action("right", "move right");
-    actions.colorRed = new robotcode.Action("colorRed", "color tile in red");
-    actions.colorGreen = new robotcode.Action("colorGreen", "color tile in green");
+    actions.stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
+    actions.stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
     actions.repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
-    actions.ifRed = new robotcode.Action("ifRed", "if the color of the tile is red", true);
+    actions.ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is color1", true);
 
     robotcode.mapActions[actions.up.name] = move(0, -1, -90);
     robotcode.mapActions[actions.down.name] = move(0, 1, 90);
     robotcode.mapActions[actions.left.name] = move(-1, 0, 180);
     robotcode.mapActions[actions.right.name] = move(1, 0, 0);
-    robotcode.mapActions[actions.colorRed.name] = color("#FF0000");
-    robotcode.mapActions[actions.colorGreen.name] = color("#00FF00");
+    robotcode.mapActions[actions.stateColor1.name] = state("color1");
+    robotcode.mapActions[actions.stateColor2.name] = state("color2");
     robotcode.mapActions[actions.repeat3Times.name] = repeat;
-    robotcode.mapActions[actions.ifRed.name] = ifAction;
+    robotcode.mapActions[actions.ifColor1.name] = ifAction;
 })(actions || (actions = {}));
 /// <reference path="robotcode.ts" />
 /// <reference path="actions.ts" />
 /// <reference path="util.ts" />
 
 var gridValue = {
-    colors: {
-        "B": "#000000",
-        "W": "#CCCCCC"
+    states: {
+        "H": "hole",
+        "N": "none",
+        "1": "color1",
+        "2": "color2"
     },
     grid: [
-        "WWWWWBBBWW",
-        "WBWWWWWWWW",
-        "WWWWWBWWWW",
-        "WWWWWWWWWB",
-        "WWWBWWWWWW",
-        "WWWWWWWWWB",
-        "WWWWWWWWWW",
-        "WWWBBWWWWW",
-        "WWWWWBWWWW",
-        "WWWWWWWWWW"
+        "NNNNNHHHNN",
+        "NHNN11NNNN",
+        "NNNNNHNNNN",
+        "NNNNNNNNNH",
+        "NNNHNNNNNN",
+        "N21NNNNNNH",
+        "NNNNN2NNNN",
+        "NNNHHNNNNN",
+        "NNNNNHNNNN",
+        "NNNNNNN1NN"
     ]
 };
 
@@ -486,9 +488,9 @@ var availableActions = new robotcode.AvailableActions([
     actions.down,
     actions.left,
     actions.right,
-    actions.colorRed,
-    actions.colorGreen,
-    actions.ifRed,
+    actions.stateColor1,
+    actions.stateColor2,
+    actions.ifColor1,
     actions.repeat3Times
 ]);
 

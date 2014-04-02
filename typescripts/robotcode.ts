@@ -2,12 +2,12 @@
 
 module robotcode {
 	export interface GridValue {
-		colors: any;
+		states: any;
 		grid: string[];
 	}
 
 	export class Cell {
-		public color:string;
+		public state:string;
 	};
 
 	export class Grid {
@@ -77,7 +77,7 @@ module robotcode {
 			cells[i] = [];
 			for (var j = 0; j < grid.height; ++j) {
 				var cell = new Cell();
-				cell.color = gridValue.colors[gridValue.grid[j][i]];
+				cell.state = gridValue.states[gridValue.grid[j][i]];
 				cells[i][j] = cell;
 			}
 		}		

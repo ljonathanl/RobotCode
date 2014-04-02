@@ -2,25 +2,25 @@
 /// <reference path="../lib/tweenjs.d.ts" />
 
 module actions {
-	function setCellColor(grid:robotcode.Grid, x:number, y:number, color:string) {
+	function setCellState(grid:robotcode.Grid, x:number, y:number, state:string) {
 		var cell = grid.cells[x][y];
 		if (cell) {
-			cell.color = color;
+			cell.state = state;
 		}
 	}
 
-	function getCellColor(grid:robotcode.Grid, x:number, y:number) {
+	function getCellState(grid:robotcode.Grid, x:number, y:number) {
 		var result = null;
 		var cell = grid.cells[x][y];
 		if (cell) {
-			result = cell.color;
+			result = cell.state;
 		}
 		return result;
 	}
 
 	function canMove(grid:robotcode.Grid, x:number, y:number):boolean {
 		if (x >= 0 && x < grid.width && y >= 0 && y < grid.height) {
-			return grid.cells[x][y].color != "#000000";
+			return grid.cells[x][y].state != "hole";
 		}
 		return false;
 	}
@@ -51,12 +51,12 @@ module actions {
 		}	
 	};
 
-	var color = function (color:string) {
+	var state = function (state:string) {
 		return (context:robotcode.Context, callback:()=>void) => {
 			var world = <robotcode.World> context.get("world");
 			var robot = world.robot;
 			var grid = world.grid;
-			setCellColor(grid, robot.x, robot.y, color);
+			setCellState(grid, robot.x, robot.y, state);
 			setTimeout(callback, 500);
 		}
 	};
@@ -84,8 +84,8 @@ module actions {
 		var world = <robotcode.World> context.get("world");
 		var robot = world.robot;
 		var grid = world.grid;
-		var color = getCellColor(grid, robot.x, robot.y);
-		if (color == "#FF0000") {
+		var state = getCellState(grid, robot.x, robot.y);
+		if (state == "#FF0000") {
 			context.set("executeChildren", true);
 		}
 
@@ -96,17 +96,17 @@ module actions {
 	export var down = new robotcode.Action("down", "move down");
 	export var left = new robotcode.Action("left", "move left");
 	export var right = new robotcode.Action("right", "move right");
-	export var colorRed = new robotcode.Action("colorRed", "color tile in red");
-	export var colorGreen = new robotcode.Action("colorGreen", "color tile in green");
+	export var stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
+	export var stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
 	export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
-	export var ifRed = new robotcode.Action("ifRed", "if the color of the tile is red", true);
+	export var ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is color1", true);
 
 	robotcode.mapActions[up.name] = move(0, -1, -90);
 	robotcode.mapActions[down.name] = move(0, 1, 90);
 	robotcode.mapActions[left.name] = move(-1, 0, 180);
 	robotcode.mapActions[right.name] = move(1, 0, 0);
-	robotcode.mapActions[colorRed.name] = color("#FF0000");
-	robotcode.mapActions[colorGreen.name] = color("#00FF00");
+	robotcode.mapActions[stateColor1.name] = state("color1");
+	robotcode.mapActions[stateColor2.name] = state("color2");
 	robotcode.mapActions[repeat3Times.name] = repeat;
-	robotcode.mapActions[ifRed.name] = ifAction;
+	robotcode.mapActions[ifColor1.name] = ifAction;
 }
