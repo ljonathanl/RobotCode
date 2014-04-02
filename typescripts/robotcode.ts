@@ -54,7 +54,7 @@ module robotcode {
 		set(key:string, value:any) {
 			this.map[key] = value;
 		}
-		get<T>(key:string):T {
+		get(key:string):any {
 			var map = this.map;
 			var parent = this.parent;
 			while(!(key in map) && parent) {
@@ -62,7 +62,7 @@ module robotcode {
 				parent = parent.parent;
 			}
 			return map[key];
-		} 
+		}
 	}	
 
 	export var mapActions:{[key:string]:(context:Context, callback:()=>void)=>void} = {};
@@ -100,11 +100,20 @@ module robotcode {
 		control:Control;
 		context:Context;
 		scriptContainer:ActionContainer = new ActionContainer();
+		currentContainer:ActionContainer = this.scriptContainer;
 		constructor(world:World) {
-			this.context = new Context();
-			this.context.set("world", world);
+			this.initContext();
 			this.control = new Control();
 		}
+
+		initContext() {
+			var context = new Context();
+			context.set("world", world);
+			context.set("container", this.scriptContainer);
+			context.set("index", -1);
+			this.context = context;
+		}
+
 		add(action:Action) {
 			var actionInstance = createActionInstance(action);
 			this.scriptContainer.actions.push(actionInstance);
@@ -122,7 +131,7 @@ module robotcode {
 			return this;
 		}
 		stop() {
-			this.currentIndex = 0;
+			this.initContext();
 			if (this.currentActionInstance) this.currentActionInstance.executing = false;
 			return this.pause();
 		}
@@ -131,24 +140,50 @@ module robotcode {
 			this.scriptContainer.actions.splice(0, this.scriptContainer.actions.length);
 			return this;
 		}
-		private end = () => {
-			this.stop();
-		}
 		private next = () => {
 			if (!this.isPaused) {
-				if (this.currentIndex >= 0 && this.currentIndex < this.scriptContainer.actions.length) {
+				var executeChildren:boolean = this.context.get("executeChildren");
+				if (executeChildren) {
+					this.enterContainer(this.currentActionInstance.container);
+				}
+				var index:number = this.context.get("index");
+				var container:ActionContainer = this.context.get("container");
+				index++;
+				this.context.set("index", index);
+				if (index >= 0 && index < container.actions.length) {
 					if (this.currentActionInstance) this.currentActionInstance.executing = false;
-					this.currentActionInstance = this.scriptContainer.actions[this.currentIndex];
+					this.currentActionInstance = container.actions[index];
 					this.currentActionInstance.executing = true;
-					this.currentIndex++;
+					this.context.set("instance", this.currentActionInstance);
 					mapActions[this.currentActionInstance.action.name](
 						this.context, 
-						this.currentIndex < this.scriptContainer.actions.length ? this.next : this.end);
+						this.next);
 				} else {
-					this.end();
+					if (this.context.parent) {
+						this.exitContainer();
+						this.next();
+					} else {
+						this.stop();
+					}
 				}
 			}
 		}
+		private enterContainer(container:ActionContainer) {
+			var context = new Context();
+			context.set("index", -1);
+			context.set("container", container);
+			context.set("executeChildren", false);
+			context.parent = this.context;
+			this.context = context;
+		}
+
+		private exitContainer() {
+			if (this.context.parent) {
+				this.context = this.context.parent;
+				this.context.set("executeChildren", false);
+			}
+		}
+
 	};
 
 	

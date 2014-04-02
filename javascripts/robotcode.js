@@ -226,39 +226,49 @@ var robotcode;
             this.currentIndex = 0;
             this.isPaused = true;
             this.scriptContainer = new ActionContainer();
-            this.end = function () {
-                _this.stop();
-            };
+            this.currentContainer = this.scriptContainer;
             this.next = function () {
                 if (!_this.isPaused) {
-                    if (_this.currentIndex >= 0 && _this.currentIndex < _this.scriptContainer.actions.length) {
+                    var executeChildren = _this.context.get("executeChildren");
+                    if (executeChildren) {
+                        _this.enterContainer(_this.currentActionInstance.container);
+                    }
+                    var index = _this.context.get("index");
+                    var container = _this.context.get("container");
+                    index++;
+                    _this.context.set("index", index);
+                    if (index >= 0 && index < container.actions.length) {
                         if (_this.currentActionInstance)
                             _this.currentActionInstance.executing = false;
-                        _this.currentActionInstance = _this.scriptContainer.actions[_this.currentIndex];
+                        _this.currentActionInstance = container.actions[index];
                         _this.currentActionInstance.executing = true;
-                        _this.currentIndex++;
-                        robotcode.mapActions[_this.currentActionInstance.action.name](_this.context, _this.currentIndex < _this.scriptContainer.actions.length ? _this.next : _this.end);
+                        _this.context.set("instance", _this.currentActionInstance);
+                        robotcode.mapActions[_this.currentActionInstance.action.name](_this.context, _this.next);
                     } else {
-                        _this.end();
+                        if (_this.context.parent) {
+                            _this.exitContainer();
+                            _this.next();
+                        } else {
+                            _this.stop();
+                        }
                     }
                 }
             };
-            this.context = new Context();
-            this.context.set("world", world);
+            this.initContext();
             this.control = new Control();
         }
+        Script.prototype.initContext = function () {
+            var context = new Context();
+            context.set("world", world);
+            context.set("container", this.scriptContainer);
+            context.set("index", -1);
+            this.context = context;
+        };
+
         Script.prototype.add = function (action) {
             var actionInstance = createActionInstance(action);
             this.scriptContainer.actions.push(actionInstance);
             return this;
-        };
-        Script.prototype.move = function (action, newIndex) {
-            this.remove(action);
-            this.scriptContainer.actions.splice(newIndex, 0, action);
-        };
-        Script.prototype.remove = function (action) {
-            var lastIndex = this.scriptContainer.actions.indexOf(action);
-            this.scriptContainer.actions.splice(lastIndex, 1);
         };
         Script.prototype.play = function () {
             this.isPaused = false;
@@ -272,7 +282,7 @@ var robotcode;
             return this;
         };
         Script.prototype.stop = function () {
-            this.currentIndex = 0;
+            this.initContext();
             if (this.currentActionInstance)
                 this.currentActionInstance.executing = false;
             return this.pause();
@@ -281,6 +291,22 @@ var robotcode;
             this.stop();
             this.scriptContainer.actions.splice(0, this.scriptContainer.actions.length);
             return this;
+        };
+
+        Script.prototype.enterContainer = function (container) {
+            var context = new Context();
+            context.set("index", -1);
+            context.set("container", container);
+            context.set("executeChildren", false);
+            context.parent = this.context;
+            this.context = context;
+        };
+
+        Script.prototype.exitContainer = function () {
+            if (this.context.parent) {
+                this.context = this.context.parent;
+                this.context.set("executeChildren", false);
+            }
         };
         return Script;
     })();
@@ -296,6 +322,15 @@ var actions;
         if (cell) {
             cell.color = color;
         }
+    }
+
+    function getCellColor(grid, x, y) {
+        var result = null;
+        var cell = grid.cells[x][y];
+        if (cell) {
+            result = cell.color;
+        }
+        return result;
     }
 
     function canMove(grid, x, y) {
@@ -342,20 +377,32 @@ var actions;
     };
 
     var repeat = function (context, callback) {
-        var index = context.get("index");
-        if (isNaN(index)) {
-            index = 0;
+        var repeatTime = context.get("repeatTime");
+        if (isNaN(repeatTime)) {
+            repeatTime = 0;
         }
-        console.log("index: " + index);
-        var canContinue = index < 3;
+        console.log("repeatTime: " + repeatTime);
+        var canContinue = repeatTime < 3;
         if (canContinue) {
-            index++;
-            context.set("index", index);
+            repeatTime++;
+            context.set("repeatTime", repeatTime);
         } else {
-            context.set("index", null);
+            context.set("repeatTime", null);
         }
 
-        setTimeout(callback, 500, canContinue);
+        setTimeout(callback, 500);
+    };
+
+    var ifAction = function (context, callback) {
+        var world = context.get("world");
+        var robot = world.robot;
+        var grid = world.grid;
+        var color = getCellColor(grid, robot.x, robot.y);
+        if (color == "#FF0000") {
+            context.set("executeChildren", true);
+        }
+
+        setTimeout(callback, 500);
     };
 
     actions.up = new robotcode.Action("up", "move up");
@@ -364,7 +411,9 @@ var actions;
     actions.right = new robotcode.Action("right", "move right");
     actions.colorRed = new robotcode.Action("colorRed", "color tile in red");
     actions.colorGreen = new robotcode.Action("colorGreen", "color tile in green");
-    actions.repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
+
+    //export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
+    actions.ifRed = new robotcode.Action("ifRed", "if the color of the tile is red", true);
 
     robotcode.mapActions[actions.up.name] = move(0, -1, -90);
     robotcode.mapActions[actions.down.name] = move(0, 1, 90);
@@ -372,7 +421,9 @@ var actions;
     robotcode.mapActions[actions.right.name] = move(1, 0, 0);
     robotcode.mapActions[actions.colorRed.name] = color("#FF0000");
     robotcode.mapActions[actions.colorGreen.name] = color("#00FF00");
-    robotcode.mapActions[actions.repeat3Times.name] = repeat;
+
+    // robotcode.mapActions[repeat3Times.name] = repeat;
+    robotcode.mapActions[actions.ifRed.name] = ifAction;
 })(actions || (actions = {}));
 /// <reference path="robotcode.ts" />
 /// <reference path="actions.ts" />
@@ -426,7 +477,7 @@ var robot = new robotcode.Robot();
 
 var world = new robotcode.World(robot, grid);
 var script = new robotcode.Script(world);
-var availableActions = new robotcode.AvailableActions([actions.up, actions.down, actions.left, actions.right, actions.colorRed, actions.colorGreen, actions.repeat3Times]);
+var availableActions = new robotcode.AvailableActions([actions.up, actions.down, actions.left, actions.right, actions.colorRed, actions.colorGreen, actions.ifRed]);
 
 Vue.directive("sortable", {
     isFn: true,

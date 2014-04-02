@@ -72,6 +72,14 @@ body {
 	content: "repeat 3 times";
 }
 
+.ifRed {
+	background-color: #AAA;
+}
+
+.ifRed:before {
+	content: "if tile is red";
+}
+
 .grid {
 	position: relative;
 }
