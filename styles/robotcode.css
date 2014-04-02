@@ -1,3 +1,7 @@
+body {
+	font-family: verdana;
+}
+
 .cell {
 	width: 60px;
 	height: 60px;
@@ -21,10 +25,11 @@
 
 .container {
 	box-sizing: border-box;	
-	width: 120px;
+	min-width: 120px;
 	min-height: 60px;
 	background-color: #CCC;
 	border: 1px solid black;
+	padding: 5px;
 }
 
 .script .action {
@@ -60,11 +65,11 @@
 }
 
 .repeat3Times {
-	background-color: #0000FF;
+	background-color: #AAA;
 }
 
-.placeHolder {
-	opacity: 0.2;
+.repeat3Times:before {
+	content: "repeat 3 times";
 }
 
 .grid {
@@ -73,6 +78,7 @@
 
 .script {
 	border: 1px solid #000;
+	min-height: 60px;
 }
 
 .actions {
@@ -137,5 +143,9 @@ body {
 
 .garbage {
 	border: 1px solid #000;
-	min-height: 50px;
+	min-height: 80px;
+}
+
+.placeHolder {
+	display: none;
 }

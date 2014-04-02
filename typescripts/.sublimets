@@ -1,5 +1,5 @@
 {
-    "root":"index.ts",
+    "root":"init.ts",
     "settings":{
         "auto_complete":true,
         "node_path":"none",

@@ -36,6 +36,18 @@ var range = function(begin:number, end:number) {
     return result;
 }
 
+var add = function<T>(container:T[], item:T, newIndex:number) {
+	container.splice(newIndex, 0, item);
+}
+var remove = function<T>(container:T[], item:T) {
+	var lastIndex = container.indexOf(item);
+	container.splice(lastIndex, 1);
+}
+var move = function<T>(container:T[], item:T, newIndex:number) {
+	remove(container, item);
+	add(container, item, newIndex);
+}
+
 var grid = robotcode.createGrid(gridValue);
 var robot = new robotcode.Robot();
 
@@ -49,7 +61,8 @@ Vue.directive("sortable", {
 	bind: function() {
 		if (!this.el.sortable) {
 			var vm = this.vm;
-			this.el.sortable = new Sortable(this.el, {group: this.el.dataset.group});
+			var data = this.el.dataset;
+			this.el.sortable = new Sortable(this.el, {group: data.group, handle: data.handle});
 			this.el.sortable.countListeners = 0;
 		}
 	},
@@ -70,6 +83,15 @@ Vue.directive("sortable", {
 	}
 });
 
+Vue.component("container", {
+	template: "#container-template",
+	replace: true
+});
+
+Vue.component("action", {
+	template: "#action-template",
+	replace: true
+});
 
 var gridView = new Vue({
 	el: ".grid",
@@ -129,11 +151,14 @@ var scriptView = new Vue({
 		actions: script.scriptContainer.actions
 	},
 	methods: {
+		add: function(event) {
+			add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+		},
 		update: function(event) {
-			script.move(event.element.vue_vm.$data.actionInstance, event.index);
+			move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
 		},
 		remove: function(event) {
-			script.remove(event.element.vue_vm.$data.actionInstance);
+			remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
 		}
 	}
 });

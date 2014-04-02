@@ -110,14 +110,6 @@ module robotcode {
 			this.scriptContainer.actions.push(actionInstance);
 			return this;
 		}
-		move(action:ActionInstance, newIndex:number) {
-			this.remove(action);
-			this.scriptContainer.actions.splice(newIndex, 0, action);
-		}
-		remove(action:ActionInstance) {
-			var lastIndex = this.scriptContainer.actions.indexOf(action);
-			this.scriptContainer.actions.splice(lastIndex, 1);
-		}
 		play() {
 			this.isPaused = false;
 			this.control.playing = true;
