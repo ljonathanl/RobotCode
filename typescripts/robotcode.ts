@@ -146,10 +146,13 @@ module robotcode {
 				if (executeChildren) {
 					this.enterContainer(this.currentActionInstance.container);
 				}
+				var redo:boolean = this.context.get("redo");
 				var index:number = this.context.get("index");
 				var container:ActionContainer = this.context.get("container");
-				index++;
-				this.context.set("index", index);
+				if (!redo) {
+					index++;
+					this.context.set("index", index);
+				}
 				if (index >= 0 && index < container.actions.length) {
 					if (this.currentActionInstance) this.currentActionInstance.executing = false;
 					this.currentActionInstance = container.actions[index];
@@ -173,6 +176,7 @@ module robotcode {
 			context.set("index", -1);
 			context.set("container", container);
 			context.set("executeChildren", false);
+			context.set("redo", false);
 			context.parent = this.context;
 			this.context = context;
 		}

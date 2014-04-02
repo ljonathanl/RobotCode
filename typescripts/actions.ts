@@ -74,6 +74,8 @@ module actions {
 		} else {
 			context.set("repeatTime", null);
 		}
+		context.set("executeChildren", canContinue);
+		context.set("redo", canContinue);
 
 		setTimeout(callback, 500);
 	}
@@ -96,7 +98,7 @@ module actions {
 	export var right = new robotcode.Action("right", "move right");
 	export var colorRed = new robotcode.Action("colorRed", "color tile in red");
 	export var colorGreen = new robotcode.Action("colorGreen", "color tile in green");
-	//export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
+	export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
 	export var ifRed = new robotcode.Action("ifRed", "if the color of the tile is red", true);
 
 	robotcode.mapActions[up.name] = move(0, -1, -90);
@@ -105,6 +107,6 @@ module actions {
 	robotcode.mapActions[right.name] = move(1, 0, 0);
 	robotcode.mapActions[colorRed.name] = color("#FF0000");
 	robotcode.mapActions[colorGreen.name] = color("#00FF00");
-	// robotcode.mapActions[repeat3Times.name] = repeat;
+	robotcode.mapActions[repeat3Times.name] = repeat;
 	robotcode.mapActions[ifRed.name] = ifAction;
 }

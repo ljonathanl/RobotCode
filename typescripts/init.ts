@@ -54,7 +54,16 @@ var robot = new robotcode.Robot();
 var world = new robotcode.World(robot, grid);
 var script = new robotcode.Script(world);
 var availableActions = new robotcode.AvailableActions(
-	[actions.up, actions.down, actions.left, actions.right, actions.colorRed, actions.colorGreen, actions.ifRed]);
+	[
+		actions.up, 
+		actions.down,
+		actions.left,
+		actions.right,
+		actions.colorRed,
+		actions.colorGreen,
+		actions.ifRed,
+		actions.repeat3Times,
+	]);
 
 Vue.directive("sortable", {
 	isFn: true,

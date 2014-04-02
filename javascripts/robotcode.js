@@ -233,10 +233,13 @@ var robotcode;
                     if (executeChildren) {
                         _this.enterContainer(_this.currentActionInstance.container);
                     }
+                    var redo = _this.context.get("redo");
                     var index = _this.context.get("index");
                     var container = _this.context.get("container");
-                    index++;
-                    _this.context.set("index", index);
+                    if (!redo) {
+                        index++;
+                        _this.context.set("index", index);
+                    }
                     if (index >= 0 && index < container.actions.length) {
                         if (_this.currentActionInstance)
                             _this.currentActionInstance.executing = false;
@@ -298,6 +301,7 @@ var robotcode;
             context.set("index", -1);
             context.set("container", container);
             context.set("executeChildren", false);
+            context.set("redo", false);
             context.parent = this.context;
             this.context = context;
         };
@@ -389,6 +393,8 @@ var actions;
         } else {
             context.set("repeatTime", null);
         }
+        context.set("executeChildren", canContinue);
+        context.set("redo", canContinue);
 
         setTimeout(callback, 500);
     };
@@ -411,8 +417,7 @@ var actions;
     actions.right = new robotcode.Action("right", "move right");
     actions.colorRed = new robotcode.Action("colorRed", "color tile in red");
     actions.colorGreen = new robotcode.Action("colorGreen", "color tile in green");
-
-    //export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
+    actions.repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
     actions.ifRed = new robotcode.Action("ifRed", "if the color of the tile is red", true);
 
     robotcode.mapActions[actions.up.name] = move(0, -1, -90);
@@ -421,8 +426,7 @@ var actions;
     robotcode.mapActions[actions.right.name] = move(1, 0, 0);
     robotcode.mapActions[actions.colorRed.name] = color("#FF0000");
     robotcode.mapActions[actions.colorGreen.name] = color("#00FF00");
-
-    // robotcode.mapActions[repeat3Times.name] = repeat;
+    robotcode.mapActions[actions.repeat3Times.name] = repeat;
     robotcode.mapActions[actions.ifRed.name] = ifAction;
 })(actions || (actions = {}));
 /// <reference path="robotcode.ts" />
@@ -477,7 +481,16 @@ var robot = new robotcode.Robot();
 
 var world = new robotcode.World(robot, grid);
 var script = new robotcode.Script(world);
-var availableActions = new robotcode.AvailableActions([actions.up, actions.down, actions.left, actions.right, actions.colorRed, actions.colorGreen, actions.ifRed]);
+var availableActions = new robotcode.AvailableActions([
+    actions.up,
+    actions.down,
+    actions.left,
+    actions.right,
+    actions.colorRed,
+    actions.colorGreen,
+    actions.ifRed,
+    actions.repeat3Times
+]);
 
 Vue.directive("sortable", {
     isFn: true,
