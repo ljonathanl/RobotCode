@@ -1,9 +1,13 @@
 /// <reference path="util.ts" />
 
 module robotcode {
-	export interface GridValue {
+	export interface WorldValue {
 		states: any;
 		grid: string[];
+		robot: {
+			x: number;
+			y: number
+		}
 	}
 
 	export class Cell {
@@ -17,9 +21,8 @@ module robotcode {
 	};
 
 	export class Robot {
-		x = 0;
-		y = 0;
 		angle = 0;
+		constructor(public x:number, public y:number) {}
 	};
 
 	export class World {
@@ -67,22 +70,25 @@ module robotcode {
 
 	export var mapActions:{[key:string]:(context:Context, callback:()=>void)=>void} = {};
 
-	export function createGrid(gridValue:GridValue):Grid {
+	export function createWorld(worldValue:WorldValue):World {
 		var grid = new Grid();
-		grid.width = gridValue.grid[0].length;
-		grid.height = gridValue.grid.length;
+		grid.width = worldValue.grid[0].length;
+		grid.height = worldValue.grid.length;
 
 		var cells:Cell[][] = [];
 		for (var i = 0; i < grid.width; ++i) {
 			cells[i] = [];
 			for (var j = 0; j < grid.height; ++j) {
 				var cell = new Cell();
-				cell.state = gridValue.states[gridValue.grid[j][i]];
+				cell.state = worldValue.states[worldValue.grid[j][i]];
 				cells[i][j] = cell;
 			}
 		}		
 		grid.cells = cells;
-		return grid;
+		
+		var robot = new Robot(worldValue.robot.x, worldValue.robot.y);
+
+		return new World(robot, grid);
 	}
 
 	function createActionInstance(action:Action) {

@@ -4,7 +4,7 @@
 
 declare var Vue:any;
 declare var Sortable:any;
-var gridValue = {
+var worldValue = {
 	states: 
 	{ 
 		"H": "hole",
@@ -24,7 +24,11 @@ var gridValue = {
 		"NNNHHNNNNN",
 		"NNNNNHNNNN",
 		"NNNNNNN1NN"
-	]
+	],
+	robot: {
+		x: 4,
+		y: 4
+	}
 }
 
 var range = function(begin:number, end:number) {
@@ -38,12 +42,10 @@ var range = function(begin:number, end:number) {
     return result;
 }
 
-var grid = robotcode.createGrid(gridValue);
-var robot = new robotcode.Robot();
-robot.x = 0;
-robot.y = 0;
+var world = robotcode.createWorld(worldValue);
+var grid = world.grid;
+var robot = world.robot;
 
-var world = new robotcode.World(robot, grid);
 var script = new robotcode.Script(world);
 var availableActions = new robotcode.AvailableActions(
 	[

@@ -103,9 +103,9 @@ var robotcode;
     ;
 
     var Robot = (function () {
-        function Robot() {
-            this.x = 0;
-            this.y = 0;
+        function Robot(x, y) {
+            this.x = x;
+            this.y = y;
             this.angle = 0;
         }
         return Robot;
@@ -193,24 +193,27 @@ var robotcode;
 
     robotcode.mapActions = {};
 
-    function createGrid(gridValue) {
+    function createWorld(worldValue) {
         var grid = new Grid();
-        grid.width = gridValue.grid[0].length;
-        grid.height = gridValue.grid.length;
+        grid.width = worldValue.grid[0].length;
+        grid.height = worldValue.grid.length;
 
         var cells = [];
         for (var i = 0; i < grid.width; ++i) {
             cells[i] = [];
             for (var j = 0; j < grid.height; ++j) {
                 var cell = new Cell();
-                cell.state = gridValue.states[gridValue.grid[j][i]];
+                cell.state = worldValue.states[worldValue.grid[j][i]];
                 cells[i][j] = cell;
             }
         }
         grid.cells = cells;
-        return grid;
+
+        var robot = new Robot(worldValue.robot.x, worldValue.robot.y);
+
+        return new World(robot, grid);
     }
-    robotcode.createGrid = createGrid;
+    robotcode.createWorld = createWorld;
 
     function createActionInstance(action) {
         var actionInstance = new ActionInstance(action);
@@ -463,7 +466,7 @@ var actions;
 /// <reference path="actions.ts" />
 /// <reference path="util.ts" />
 
-var gridValue = {
+var worldValue = {
     states: {
         "H": "hole",
         "N": "none",
@@ -481,7 +484,11 @@ var gridValue = {
         "NNNHHNNNNN",
         "NNNNNHNNNN",
         "NNNNNNN1NN"
-    ]
+    ],
+    robot: {
+        x: 4,
+        y: 4
+    }
 };
 
 var range = function (begin, end) {
@@ -496,12 +503,10 @@ var range = function (begin, end) {
     return result;
 };
 
-var grid = robotcode.createGrid(gridValue);
-var robot = new robotcode.Robot();
-robot.x = 0;
-robot.y = 0;
+var world = robotcode.createWorld(worldValue);
+var grid = world.grid;
+var robot = world.robot;
 
-var world = new robotcode.World(robot, grid);
 var script = new robotcode.Script(world);
 var availableActions = new robotcode.AvailableActions([
     actions.up,
