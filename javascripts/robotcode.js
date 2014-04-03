@@ -259,7 +259,16 @@ var robotcode;
             };
             this.initContext();
             this.control = new Control();
+            this.load();
         }
+        Script.prototype.load = function () {
+            this.scriptContainer = JSON.parse(localStorage.getItem("script")) || new ActionContainer();
+        };
+
+        Script.prototype.save = function () {
+            localStorage.setItem("script", JSON.stringify(this.scriptContainer));
+        };
+
         Script.prototype.initContext = function () {
             var context = new Context();
             context.set("world", world);
@@ -271,23 +280,26 @@ var robotcode;
         Script.prototype.create = function (action) {
             var actionInstance = createActionInstance(action);
             this.scriptContainer.actions.push(actionInstance);
-            return this;
+            this.save();
         };
 
         Script.prototype.add = function (container, item, newIndex) {
             container.splice(newIndex, 0, item);
             this.stop();
+            this.save();
         };
         Script.prototype.remove = function (container, item) {
             var lastIndex = container.indexOf(item);
             container.splice(lastIndex, 1);
             this.stop();
+            this.save();
         };
         Script.prototype.move = function (container, item, newIndex) {
             var lastIndex = container.indexOf(item);
             container.splice(lastIndex, 1);
             container.splice(newIndex, 0, item);
             this.stop();
+            this.save();
         };
 
         Script.prototype.play = function () {
@@ -310,6 +322,7 @@ var robotcode;
         Script.prototype.clear = function () {
             this.stop();
             this.scriptContainer.actions.splice(0, this.scriptContainer.actions.length);
+            this.save();
             return this;
         };
 

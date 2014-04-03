@@ -104,6 +104,15 @@ module robotcode {
 		constructor(world:World) {
 			this.initContext();
 			this.control = new Control();
+			this.load();
+		}
+
+		load() {
+			this.scriptContainer = JSON.parse(localStorage.getItem("script")) || new ActionContainer();
+		}
+
+		save() {
+			localStorage.setItem("script", JSON.stringify(this.scriptContainer));
 		}
 
 		initContext() {
@@ -117,23 +126,26 @@ module robotcode {
 		create(action:Action) {
 			var actionInstance = createActionInstance(action);
 			this.scriptContainer.actions.push(actionInstance);
-			return this;
+			this.save();
 		}
 
 		add(container:ActionInstance[], item:ActionInstance, newIndex:number) {
 			container.splice(newIndex, 0, item);
 			this.stop();
+			this.save();
 		}
 		remove(container:ActionInstance[], item:ActionInstance) {
 			var lastIndex = container.indexOf(item);
 			container.splice(lastIndex, 1);
 			this.stop();
+			this.save();
 		}
 		move(container:ActionInstance[], item:ActionInstance, newIndex:number) {
 			var lastIndex = container.indexOf(item);
 			container.splice(lastIndex, 1);
 			container.splice(newIndex, 0, item);
 			this.stop();
+			this.save();
 		}
 
 		play() {
@@ -155,6 +167,7 @@ module robotcode {
 		clear() {
 			this.stop();
 			this.scriptContainer.actions.splice(0, this.scriptContainer.actions.length);
+			this.save();
 			return this;
 		}
 		private next = () => {
