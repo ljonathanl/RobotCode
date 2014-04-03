@@ -485,6 +485,8 @@ var range = function (begin, end) {
 
 var grid = robotcode.createGrid(gridValue);
 var robot = new robotcode.Robot();
+robot.x = 0;
+robot.y = 0;
 
 var world = new robotcode.World(robot, grid);
 var script = new robotcode.Script(world);

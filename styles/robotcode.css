@@ -36,7 +36,7 @@ table {
 }
 
 .none {
-	background-color: #e67e22;
+	background-color: #bdc3c7;
 }
 
 .color1 {
@@ -63,13 +63,23 @@ table {
 	border-left: 2px solid #ecf0f1;
 }
 
-/*.hole-right:after {
-	box-shadow: 10px 5px 0 0px #d35400;
+.cell-top {
+	border-top: 2px solid #ecf0f1;
 }
 
-.hole-bottom:before {
-	box-shadow: 5px 10px 0 0px #d35400;
-}*/
+.cell-bottom {
+	border-bottom: 2px solid #ecf0f1;
+}
+
+.cell-right {
+	border-right: 2px solid #ecf0f1;
+}
+
+.cell-left {
+	border-left: 2px solid #ecf0f1;
+}
+
+
 
 .cell:after {
 	content: " ";  
