@@ -36,7 +36,7 @@ table {
 }
 
 .none {
-	background-color: #bdc3c7;
+	background-color: #95a5a6;
 }
 
 .color1 {
@@ -63,7 +63,7 @@ table {
 	border-left: 2px solid #ecf0f1;
 }
 
-.cell-top {
+/*.cell-top {
 	border-top: 2px solid #ecf0f1;
 }
 
@@ -77,7 +77,7 @@ table {
 
 .cell-left {
 	border-left: 2px solid #ecf0f1;
-}
+}*/
 
 
 
