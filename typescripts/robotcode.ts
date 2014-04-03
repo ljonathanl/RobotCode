@@ -114,22 +114,26 @@ module robotcode {
 			this.context = context;
 		}
 
-		add(action:Action) {
+		create(action:Action) {
 			var actionInstance = createActionInstance(action);
 			this.scriptContainer.actions.push(actionInstance);
 			return this;
 		}
 
-		static add(container:ActionInstance[], item:ActionInstance, newIndex:number) {
+		add(container:ActionInstance[], item:ActionInstance, newIndex:number) {
 			container.splice(newIndex, 0, item);
+			this.stop();
 		}
-		static remove(container:ActionInstance[], item:ActionInstance) {
+		remove(container:ActionInstance[], item:ActionInstance) {
 			var lastIndex = container.indexOf(item);
 			container.splice(lastIndex, 1);
+			this.stop();
 		}
-		static move(container:ActionInstance[], item:ActionInstance, newIndex:number) {
-			Script.remove(container, item);
-			Script.add(container, item, newIndex);
+		move(container:ActionInstance[], item:ActionInstance, newIndex:number) {
+			var lastIndex = container.indexOf(item);
+			container.splice(lastIndex, 1);
+			container.splice(newIndex, 0, item);
+			this.stop();
 		}
 
 		play() {

@@ -164,7 +164,7 @@ var availableActionsView = new Vue({
 	data: availableActions,
 	methods: {
 		add: (action:robotcode.Action)=>{
-			script.add(action);
+			script.create(action);
 		},
 	}
 });
@@ -186,13 +186,13 @@ var scriptView = new Vue({
 	},
 	methods: {
 		add: function(event) {
-			robotcode.Script.add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+			script.add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
 		},
 		update: function(event) {
-			robotcode.Script.move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+			script.move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
 		},
 		remove: function(event) {
-			robotcode.Script.remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
+			script.remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
 		}
 	}
 });

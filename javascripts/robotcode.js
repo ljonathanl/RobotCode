@@ -268,22 +268,26 @@ var robotcode;
             this.context = context;
         };
 
-        Script.prototype.add = function (action) {
+        Script.prototype.create = function (action) {
             var actionInstance = createActionInstance(action);
             this.scriptContainer.actions.push(actionInstance);
             return this;
         };
 
-        Script.add = function (container, item, newIndex) {
+        Script.prototype.add = function (container, item, newIndex) {
             container.splice(newIndex, 0, item);
+            this.stop();
         };
-        Script.remove = function (container, item) {
+        Script.prototype.remove = function (container, item) {
             var lastIndex = container.indexOf(item);
             container.splice(lastIndex, 1);
+            this.stop();
         };
-        Script.move = function (container, item, newIndex) {
-            Script.remove(container, item);
-            Script.add(container, item, newIndex);
+        Script.prototype.move = function (container, item, newIndex) {
+            var lastIndex = container.indexOf(item);
+            container.splice(lastIndex, 1);
+            container.splice(newIndex, 0, item);
+            this.stop();
         };
 
         Script.prototype.play = function () {
@@ -604,7 +608,7 @@ var availableActionsView = new Vue({
     data: availableActions,
     methods: {
         add: function (action) {
-            script.add(action);
+            script.create(action);
         }
     }
 });
@@ -626,13 +630,13 @@ var scriptView = new Vue({
     },
     methods: {
         add: function (event) {
-            robotcode.Script.add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+            script.add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
         },
         update: function (event) {
-            robotcode.Script.move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+            script.move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
         },
         remove: function (event) {
-            robotcode.Script.remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
+            script.remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
         }
     }
 });
