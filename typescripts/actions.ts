@@ -85,7 +85,7 @@ module actions {
 		var robot = world.robot;
 		var grid = world.grid;
 		var state = getCellState(grid, robot.x, robot.y);
-		if (state == "#FF0000") {
+		if (state == "color1") {
 			context.set("executeChildren", true);
 		}
 

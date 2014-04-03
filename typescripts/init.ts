@@ -15,7 +15,7 @@ var gridValue = {
 	grid:
 	[
 		"NNNNNHHHNN",
-		"NHNN11NNNN",
+		"1HNN11NNNN",
 		"NNNNNHNNNN",
 		"NNNNNNNNNH",
 		"NNNHNNNNNN",
@@ -38,18 +38,6 @@ var range = function(begin:number, end:number) {
     return result;
 }
 
-var add = function<T>(container:T[], item:T, newIndex:number) {
-	container.splice(newIndex, 0, item);
-}
-var remove = function<T>(container:T[], item:T) {
-	var lastIndex = container.indexOf(item);
-	container.splice(lastIndex, 1);
-}
-var move = function<T>(container:T[], item:T, newIndex:number) {
-	remove(container, item);
-	add(container, item, newIndex);
-}
-
 var grid = robotcode.createGrid(gridValue);
 var robot = new robotcode.Robot();
 
@@ -66,6 +54,40 @@ var availableActions = new robotcode.AvailableActions(
 		actions.ifColor1,
 		actions.repeat3Times,
 	]);
+
+var initClasses = function(i:number, j:number):string {
+	var classes:string[] = [];
+	var cells = grid.cells;
+	var cell:robotcode.Cell = cells[i][j];
+	if (cell.state == "hole") {
+		if (i - 1 >= 0 && cells[i - 1][j].state != "hole") {
+			classes.push("cell-left");
+		}
+		if (i + 1 < grid.width && cells[i + 1][j].state != "hole") {
+			classes.push("cell-right");
+		}
+		if (j - 1 >= 0 && cells[i][j - 1].state != "hole") {
+			classes.push("cell-top");
+		}
+		if (j + 1 < grid.height && cells[i][j + 1].state != "hole") {
+			classes.push("cell-bottom");
+		}
+	} else {
+		if (i - 1 < 0 || cells[i - 1][j].state == "hole") {
+			classes.push("hole-left");
+		}
+		if (i + 1 >= grid.width || cells[i + 1][j].state == "hole") {
+			classes.push("hole-right");
+		}
+		if (j - 1 < 0 || cells[i][j - 1].state == "hole") {
+			classes.push("hole-top");
+		}
+		if (j + 1 >= grid.height || cells[i][j + 1].state == "hole") {
+			classes.push("hole-bottom");
+		}
+	}
+	return classes.join(" ");
+}
 
 Vue.directive("sortable", {
 	isFn: true,
@@ -108,7 +130,8 @@ var gridView = new Vue({
 	el: ".grid",
 	data: grid,
 	methods: {
-		range: range
+		range: range,
+		initClasses: initClasses,
 	}
 });
 
@@ -163,13 +186,13 @@ var scriptView = new Vue({
 	},
 	methods: {
 		add: function(event) {
-			add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+			robotcode.Script.add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
 		},
 		update: function(event) {
-			move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+			robotcode.Script.move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
 		},
 		remove: function(event) {
-			remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
+			robotcode.Script.remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
 		}
 	}
 });

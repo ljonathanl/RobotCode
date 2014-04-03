@@ -119,6 +119,19 @@ module robotcode {
 			this.scriptContainer.actions.push(actionInstance);
 			return this;
 		}
+
+		static add(container:ActionInstance[], item:ActionInstance, newIndex:number) {
+			container.splice(newIndex, 0, item);
+		}
+		static remove(container:ActionInstance[], item:ActionInstance) {
+			var lastIndex = container.indexOf(item);
+			container.splice(lastIndex, 1);
+		}
+		static move(container:ActionInstance[], item:ActionInstance, newIndex:number) {
+			Script.remove(container, item);
+			Script.add(container, item, newIndex);
+		}
+
 		play() {
 			this.isPaused = false;
 			this.control.playing = true;

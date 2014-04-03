@@ -273,6 +273,19 @@ var robotcode;
             this.scriptContainer.actions.push(actionInstance);
             return this;
         };
+
+        Script.add = function (container, item, newIndex) {
+            container.splice(newIndex, 0, item);
+        };
+        Script.remove = function (container, item) {
+            var lastIndex = container.indexOf(item);
+            container.splice(lastIndex, 1);
+        };
+        Script.move = function (container, item, newIndex) {
+            Script.remove(container, item);
+            Script.add(container, item, newIndex);
+        };
+
         Script.prototype.play = function () {
             this.isPaused = false;
             this.control.playing = true;
@@ -404,7 +417,7 @@ var actions;
         var robot = world.robot;
         var grid = world.grid;
         var state = getCellState(grid, robot.x, robot.y);
-        if (state == "#FF0000") {
+        if (state == "color1") {
             context.set("executeChildren", true);
         }
 
@@ -442,7 +455,7 @@ var gridValue = {
     },
     grid: [
         "NNNNNHHHNN",
-        "NHNN11NNNN",
+        "1HNN11NNNN",
         "NNNNNHNNNN",
         "NNNNNNNNNH",
         "NNNHNNNNNN",
@@ -466,18 +479,6 @@ var range = function (begin, end) {
     return result;
 };
 
-var add = function (container, item, newIndex) {
-    container.splice(newIndex, 0, item);
-};
-var remove = function (container, item) {
-    var lastIndex = container.indexOf(item);
-    container.splice(lastIndex, 1);
-};
-var move = function (container, item, newIndex) {
-    remove(container, item);
-    add(container, item, newIndex);
-};
-
 var grid = robotcode.createGrid(gridValue);
 var robot = new robotcode.Robot();
 
@@ -493,6 +494,40 @@ var availableActions = new robotcode.AvailableActions([
     actions.ifColor1,
     actions.repeat3Times
 ]);
+
+var initClasses = function (i, j) {
+    var classes = [];
+    var cells = grid.cells;
+    var cell = cells[i][j];
+    if (cell.state == "hole") {
+        if (i - 1 >= 0 && cells[i - 1][j].state != "hole") {
+            classes.push("cell-left");
+        }
+        if (i + 1 < grid.width && cells[i + 1][j].state != "hole") {
+            classes.push("cell-right");
+        }
+        if (j - 1 >= 0 && cells[i][j - 1].state != "hole") {
+            classes.push("cell-top");
+        }
+        if (j + 1 < grid.height && cells[i][j + 1].state != "hole") {
+            classes.push("cell-bottom");
+        }
+    } else {
+        if (i - 1 < 0 || cells[i - 1][j].state == "hole") {
+            classes.push("hole-left");
+        }
+        if (i + 1 >= grid.width || cells[i + 1][j].state == "hole") {
+            classes.push("hole-right");
+        }
+        if (j - 1 < 0 || cells[i][j - 1].state == "hole") {
+            classes.push("hole-top");
+        }
+        if (j + 1 >= grid.height || cells[i][j + 1].state == "hole") {
+            classes.push("hole-bottom");
+        }
+    }
+    return classes.join(" ");
+};
 
 Vue.directive("sortable", {
     isFn: true,
@@ -535,7 +570,8 @@ var gridView = new Vue({
     el: ".grid",
     data: grid,
     methods: {
-        range: range
+        range: range,
+        initClasses: initClasses
     }
 });
 
@@ -590,13 +626,13 @@ var scriptView = new Vue({
     },
     methods: {
         add: function (event) {
-            add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+            robotcode.Script.add(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
         },
         update: function (event) {
-            move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
+            robotcode.Script.move(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance, event.index);
         },
         remove: function (event) {
-            remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
+            robotcode.Script.remove(event.container.vue_vm.$data.actions, event.element.vue_vm.$data.actionInstance);
         }
     }
 });
