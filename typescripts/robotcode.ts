@@ -137,20 +137,17 @@ module robotcode {
 
 		add(container:ActionInstance[], item:ActionInstance, newIndex:number) {
 			container.splice(newIndex, 0, item);
-			this.stop();
 			this.save();
 		}
 		remove(container:ActionInstance[], item:ActionInstance) {
 			var lastIndex = container.indexOf(item);
 			container.splice(lastIndex, 1);
-			this.stop();
 			this.save();
 		}
 		move(container:ActionInstance[], item:ActionInstance, newIndex:number) {
 			var lastIndex = container.indexOf(item);
 			container.splice(lastIndex, 1);
 			container.splice(newIndex, 0, item);
-			this.stop();
 			this.save();
 		}
 
@@ -167,7 +164,10 @@ module robotcode {
 		}
 		stop() {
 			this.initContext();
-			if (this.currentActionInstance) this.currentActionInstance.executing = false;
+			if (this.currentActionInstance) {
+				this.currentActionInstance.executing = false;
+				this.currentActionInstance = null;
+			}
 			return this.pause();
 		}
 		clear() {

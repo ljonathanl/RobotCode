@@ -288,20 +288,17 @@ var robotcode;
 
         Script.prototype.add = function (container, item, newIndex) {
             container.splice(newIndex, 0, item);
-            this.stop();
             this.save();
         };
         Script.prototype.remove = function (container, item) {
             var lastIndex = container.indexOf(item);
             container.splice(lastIndex, 1);
-            this.stop();
             this.save();
         };
         Script.prototype.move = function (container, item, newIndex) {
             var lastIndex = container.indexOf(item);
             container.splice(lastIndex, 1);
             container.splice(newIndex, 0, item);
-            this.stop();
             this.save();
         };
 
@@ -318,8 +315,10 @@ var robotcode;
         };
         Script.prototype.stop = function () {
             this.initContext();
-            if (this.currentActionInstance)
+            if (this.currentActionInstance) {
                 this.currentActionInstance.executing = false;
+                this.currentActionInstance = null;
+            }
             return this.pause();
         };
         Script.prototype.clear = function () {
