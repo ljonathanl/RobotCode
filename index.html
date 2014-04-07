@@ -12,52 +12,7 @@
 		<script type="text/javascript" src="lib/vue.js"></script>
 	</head>
 	<body>
-		<div style="height: 0px" class="placeholder">
-			<div style="height: 5px; background-color: red"></div>
-		</div>
-		<div class="gridContainer">
-			<table class="grid">
-				<tr v-repeat="j: range(0, height)">
-					<td v-repeat="i: range(0, width)">
-						<div 
-							class="cell {{initClasses(i, j)}}"
-							v-class="cells[i][j].state">
-						</div>
-					</td>
-				</tr>
-			</table>
-			<div 
-				class="robot"
-				v-style="
-					left: x * 60 + 'px',
-					top: y * 60 + 'px',
-					$transform: 'rotate(' + angle + 'deg)'
-				">
-			</div>
-		</div>
-		
-
-		<div class="scriptContainer">
-			<div class="controlBoard">
-				<button 
-					class="control play" 
-					v-on="click: play" 
-					v-show="!playing">
-				</button>
-				<button 
-					class="control pause" 
-					v-on="click: pause" 
-					v-show="playing">
-				</button>
-				<button 
-					class="control stop" 
-					v-on="click: stop">
-				</button>
-				<button
-					class="control clear" 
-					v-on="click: clear">
-				</button>
-			</div>
+		<div class="top">
 			<div class="availableActions">
 				<button v-repeat="action: actions" 
 					class="action"
@@ -66,19 +21,63 @@
 					v-on="click: add(action)">
 				</button>
 			</div>
-			<div class="garbage" v-sortable data-group="actions">
-				GARBAGE !!!
+
+			<div class="gridContainer">
+				<table class="grid">
+					<tr v-repeat="j: range(0, height)">
+						<td v-repeat="i: range(0, width)">
+							<div 
+								class="cell {{initClasses(i, j)}}"
+								v-class="cells[i][j].state">
+							</div>
+						</td>
+					</tr>
+				</table>
+				<div 
+					class="robot"
+					v-style="
+						left: x * 60 + 'px',
+						top: y * 60 + 'px',
+						$transform: 'rotate(' + angle + 'deg)'
+					">
+				</div>
 			</div>
-			<div 
-				class="script"
-				data-group="actions"
-				data-handle=".action" 
-				v-sortable="
-					update: update,
-					remove: remove,
-					add: add
-				">
-				<div v-component="action" v-repeat="actionInstance: actions"></div>
+		</div>
+
+		<div class="bottom">
+			<div class="scriptContainer">
+				<div class="controlBoard">
+					<button 
+						class="control play" 
+						v-on="click: play" 
+						v-show="!playing">
+					</button>
+					<button 
+						class="control stop" 
+						v-on="click: stop"
+						v-show="playing">
+					</button>
+					<button
+						class="control clear" 
+						v-on="click: clear">
+					</button>
+				</div>
+				
+				
+				<div 
+					class="script"
+					data-group="actions"
+					data-handle=".action" 
+					v-sortable="
+						update: update,
+						remove: remove,
+						add: add
+					">
+					<div v-component="action" v-repeat="actionInstance: actions"></div>
+				</div>
+				<div class="garbage" v-sortable data-group="actions">
+					GARBAGE !!!
+				</div>
 			</div>
 		</div>
 

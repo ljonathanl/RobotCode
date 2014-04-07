@@ -12,6 +12,16 @@ table {
 	border-spacing: 0px;
 }
 
+.top {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+}
+
+.bottom {
+	width: 100%;
+}
+
 .grid {
 	position: relative;
 	/*border-left: 3px dashed #ecf0f1;
@@ -174,6 +184,12 @@ table {
 .script {
 	border: 1px solid #000;
 	min-height: 60px;
+	width: 100%;
+	display: flex;
+}
+
+.instance {
+	margin: 0 10px;
 }
 
 .actions {
@@ -207,19 +223,20 @@ table {
 }
 
 .availableActions {
+	box-sizing: border-box; 
+	width: 30%;
 	border: 1px solid #000;
 }
 
 .gridContainer {
-	position: absolute;
-	left: 20px;
-	top: 20px;
+	position: relative;
+	width: 50%;
+	box-sizing: border-box;
 }
 
 .scriptContainer {
-	width: 40%;
-	position: absolute;
-	right: 0;
+	display: flex;
+	margin-top: 20px;
 }
 
 .garbage {

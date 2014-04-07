@@ -473,16 +473,13 @@ var worldValue = {
         "2": "color2"
     },
     grid: [
-        "NNNNNHHHNN",
-        "1HNN11NNNN",
-        "NNNNNHNNNN",
-        "NNNNNNNNNH",
-        "NNNHNNNNNN",
-        "N21NNNNNNH",
-        "NNNNN2NNNN",
-        "NNNHHNNNNN",
-        "NNNNNHNNNN",
-        "NNNNNNN1NN"
+        "NNNNNHHHNNNNN",
+        "1HNN11NNNNNNN",
+        "NNNNNHNNNNNHH",
+        "NNNNNNNNNHNNN",
+        "NNNHNNNNNNNHN",
+        "N21NNNNNNHNHN",
+        "NNNNN2NNNN22N"
     ],
     robot: {
         x: 4,
