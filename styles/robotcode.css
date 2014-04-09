@@ -9,6 +9,16 @@
 	font-style: normal;
 }
 
+@font-face {
+	font-family: "robo";
+	src: url("../fonts/alex_murphy_solid.eot?") format("eot"),
+		 url("../fonts/alex_murphy_solid.woff") format("woff"),
+		 url("../fonts/alex_murphy_solid.ttf") format("truetype"),
+		 url("../fonts/alex_murphy_solid.svg#Alex-Murphy-Solid") format("svg");
+	font-weight:normal;
+	font-style:normal;
+}
+
 .robot,
 .play, .stop,
 .clear, .garbage,
@@ -53,9 +63,9 @@ table {
 .title {
 	font-family: 'Press Start 2P', cursive;
 	margin-bottom: 40px;
-	color: #ecf0f1;
+	color: #2980b9;
 	font-size: 64px;
-	text-shadow: 10px 10px 0px #2c3e50;
+	text-shadow: -2px -2px 0px #ecf0f1, 2px 2px 0px #ecf0f1, -2px 2px 0px #ecf0f1, 2px -2px 0px #ecf0f1, 10px 10px 0px #2c3e50;
 }
 
 
