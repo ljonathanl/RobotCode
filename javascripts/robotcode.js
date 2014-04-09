@@ -452,10 +452,10 @@ var actions;
     actions.repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
     actions.ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is color1", true);
 
-    robotcode.mapActions[actions.up.name] = move(0, -1, -90);
-    robotcode.mapActions[actions.down.name] = move(0, 1, 90);
-    robotcode.mapActions[actions.left.name] = move(-1, 0, 180);
-    robotcode.mapActions[actions.right.name] = move(1, 0, 0);
+    robotcode.mapActions[actions.up.name] = move(0, -1, 180);
+    robotcode.mapActions[actions.down.name] = move(0, 1, 0);
+    robotcode.mapActions[actions.left.name] = move(-1, 0, 90);
+    robotcode.mapActions[actions.right.name] = move(1, 0, -90);
     robotcode.mapActions[actions.stateColor1.name] = state("color1");
     robotcode.mapActions[actions.stateColor2.name] = state("color2");
     robotcode.mapActions[actions.repeat3Times.name] = repeat;
@@ -497,6 +497,16 @@ var range = function (begin, end) {
     }
     ;
     return result;
+};
+
+var degToRad = Math.PI / 180;
+var toPosition = function (angle, offset) {
+    var x, y = 0;
+    var angleRad = angle * degToRad;
+    x = Math.round(offset * Math.cos(angleRad));
+    y = Math.round(offset * Math.sin(angleRad));
+
+    return x + "px " + y + "px";
 };
 
 var world = robotcode.createWorld(worldValue);
@@ -597,7 +607,10 @@ var gridView = new Vue({
 
 var robotView = new Vue({
     el: ".robot",
-    data: robot
+    data: robot,
+    methods: {
+        toPosition: toPosition
+    }
 });
 
 var controlView = new Vue({
@@ -609,9 +622,6 @@ var controlView = new Vue({
         },
         pause: function () {
             script.pause();
-        },
-        clear: function () {
-            script.clear();
         },
         stop: function () {
             script.stop();
@@ -631,16 +641,15 @@ var availableActionsView = new Vue({
 
 var garbageView = new Vue({
     el: ".garbage",
-    sortable: {
-        group: "actions"
+    methods: {
+        clear: function () {
+            script.clear();
+        }
     }
 });
 
 var scriptView = new Vue({
     el: ".script",
-    sortable: {
-        group: "actions"
-    },
     data: {
         actions: script.scriptContainer.actions
     },

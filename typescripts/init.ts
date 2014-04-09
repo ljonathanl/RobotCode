@@ -39,6 +39,16 @@ var range = function(begin:number, end:number) {
     return result;
 }
 
+var degToRad = Math.PI / 180;
+var toPosition = function(angle:number, offset:number) {
+	var x,y = 0;
+	var angleRad = angle * degToRad;
+	x = Math.round(offset * Math.cos(angleRad));
+	y = Math.round(offset * Math.sin(angleRad));
+	
+    return x + "px " + y + "px";
+}
+
 var world = robotcode.createWorld(worldValue);
 var grid = world.grid;
 var robot = world.robot;
@@ -138,7 +148,10 @@ var gridView = new Vue({
 
 var robotView = new Vue({
 	el: ".robot",
-	data: robot
+	data: robot,
+	methods: {
+		toPosition: toPosition
+	}
 });
 
 var controlView = new Vue({
@@ -150,9 +163,6 @@ var controlView = new Vue({
 		},
 		pause: ()=>{
 			script.pause();
-		},
-		clear: ()=>{
-			script.clear();
 		},
 		stop: ()=>{
 			script.stop();
@@ -172,16 +182,15 @@ var availableActionsView = new Vue({
 
 var garbageView = new Vue({
 	el: ".garbage",
-	sortable: {
-		group: "actions"
+	methods: {
+		clear: ()=>{
+			script.clear();
+		}
 	}
 });
 
 var scriptView = new Vue({
 	el: ".script",
-	sortable: {
-		group: "actions"
-	},
 	data: {
 		actions: script.scriptContainer.actions
 	},

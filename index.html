@@ -38,7 +38,7 @@
 					v-style="
 						left: x * 60 + 'px',
 						top: y * 60 + 'px',
-						$transform: 'rotate(' + angle + 'deg)'
+						$transform: 'rotate(' + angle + 'deg)',
 					">
 				</div>
 			</div>
@@ -57,10 +57,6 @@
 						v-on="click: stop"
 						v-show="playing">
 					</button>
-					<button
-						class="control clear" 
-						v-on="click: clear">
-					</button>
 				</div>
 				
 				
@@ -75,8 +71,12 @@
 					">
 					<div v-component="action" v-repeat="actionInstance: actions"></div>
 				</div>
-				<div class="garbage" v-sortable data-group="actions">
-				</div>
+				<button 
+					class="garbage" 
+					v-sortable 
+					data-group="actions"
+					v-on="click: clear">
+				</button>
 			</div>
 		</div>
 
@@ -94,11 +94,11 @@
 				class="instance" 
 				v-class="executing: actionInstance.executing"
 				draggable="true">
-				<div 
+				<button 
 					class="action"
 					v-attr="title: actionInstance.action.description"
 					v-class="actionInstance.action.name">
-				</div>
+				</button>
 				<div 
 					v-if="actionInstance.action.container"
 					v-with="actionInstance.container"

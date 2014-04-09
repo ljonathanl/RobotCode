@@ -101,10 +101,10 @@ module actions {
 	export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
 	export var ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is color1", true);
 
-	robotcode.mapActions[up.name] = move(0, -1, -90);
-	robotcode.mapActions[down.name] = move(0, 1, 90);
-	robotcode.mapActions[left.name] = move(-1, 0, 180);
-	robotcode.mapActions[right.name] = move(1, 0, 0);
+	robotcode.mapActions[up.name] = move(0, -1, 180);
+	robotcode.mapActions[down.name] = move(0, 1, 0);
+	robotcode.mapActions[left.name] = move(-1, 0, 90);
+	robotcode.mapActions[right.name] = move(1, 0, -90);
 	robotcode.mapActions[stateColor1.name] = state("color1");
 	robotcode.mapActions[stateColor2.name] = state("color2");
 	robotcode.mapActions[repeat3Times.name] = repeat;
