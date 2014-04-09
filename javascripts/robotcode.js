@@ -232,23 +232,23 @@ var robotcode;
             this.currentContainer = this.scriptContainer;
             this.next = function () {
                 if (!_this.isPaused) {
-                    var executeChildren = _this.context.get("executeChildren");
+                    var executeChildren = _this.context.executeChildren;
                     if (executeChildren) {
                         _this.enterContainer(_this.currentActionInstance.container);
                     }
-                    var redo = _this.context.get("redo");
-                    var index = _this.context.get("index");
-                    var container = _this.context.get("container");
+                    var redo = _this.context.redo;
+                    var index = _this.context.index;
+                    var container = _this.context.container;
                     if (!redo) {
                         index++;
-                        _this.context.set("index", index);
+                        _this.context.index = index;
                     }
                     if (index >= 0 && index < container.actions.length) {
                         if (_this.currentActionInstance)
                             _this.currentActionInstance.executing = false;
                         _this.currentActionInstance = container.actions[index];
                         _this.currentActionInstance.executing = true;
-                        _this.context.set("instance", _this.currentActionInstance);
+                        _this.context.instance = _this.currentActionInstance;
                         robotcode.mapActions[_this.currentActionInstance.action.name](_this.context, _this.next);
                     } else {
                         if (_this.context.parent) {
@@ -260,9 +260,9 @@ var robotcode;
                     }
                 }
             };
-            this.initContext();
             this.control = new Control();
             this.load();
+            this.initContext();
         }
         Script.prototype.load = function () {
             this.scriptContainer = JSON.parse(localStorage.getItem("script")) || new ActionContainer();
@@ -275,8 +275,10 @@ var robotcode;
         Script.prototype.initContext = function () {
             var context = new Context();
             context.set("world", world);
-            context.set("container", this.scriptContainer);
-            context.set("index", -1);
+            context.container = this.scriptContainer;
+            context.index = -1;
+            context.executeChildren = false;
+            context.redo = false;
             this.context = context;
         };
 
@@ -330,10 +332,10 @@ var robotcode;
 
         Script.prototype.enterContainer = function (container) {
             var context = new Context();
-            context.set("index", -1);
-            context.set("container", container);
-            context.set("executeChildren", false);
-            context.set("redo", false);
+            context.index = -1;
+            context.container = container;
+            context.executeChildren = false;
+            context.redo = false;
             context.parent = this.context;
             this.context = context;
         };
@@ -341,7 +343,7 @@ var robotcode;
         Script.prototype.exitContainer = function () {
             if (this.context.parent) {
                 this.context = this.context.parent;
-                this.context.set("executeChildren", false);
+                this.context.executeChildren = false;
             }
         };
         return Script;
@@ -412,35 +414,37 @@ var actions;
         };
     };
 
-    var repeat = function (context, callback) {
-        var repeatTime = context.get("repeatTime");
-        if (isNaN(repeatTime)) {
-            repeatTime = 0;
-        }
-        console.log("repeatTime: " + repeatTime);
-        var canContinue = repeatTime < 3;
-        if (canContinue) {
-            repeatTime++;
-            context.set("repeatTime", repeatTime);
-        } else {
-            context.set("repeatTime", null);
-        }
-        context.set("executeChildren", canContinue);
-        context.set("redo", canContinue);
+    var repeat = function (count) {
+        return function (context, callback) {
+            var repeatTime = context.get("repeatTime");
+            if (isNaN(repeatTime)) {
+                repeatTime = 0;
+            }
+            console.log("repeatTime: " + repeatTime);
+            var canContinue = repeatTime < count;
+            if (canContinue) {
+                repeatTime++;
+                context.set("repeatTime", repeatTime);
+            } else {
+                context.set("repeatTime", null);
+            }
+            context.executeChildren = canContinue;
+            context.redo = canContinue;
 
-        setTimeout(callback, 500);
+            setTimeout(callback, 500);
+        };
     };
 
-    var ifAction = function (context, callback) {
-        var world = context.get("world");
-        var robot = world.robot;
-        var grid = world.grid;
-        var state = getCellState(grid, robot.x, robot.y);
-        if (state == "color1") {
-            context.set("executeChildren", true);
-        }
+    var ifState = function (state) {
+        return function (context, callback) {
+            var world = context.get("world");
+            var robot = world.robot;
+            var grid = world.grid;
+            var cellState = getCellState(grid, robot.x, robot.y);
+            context.executeChildren = state == cellState;
 
-        setTimeout(callback, 500);
+            setTimeout(callback, 500);
+        };
     };
 
     actions.up = new robotcode.Action("up", "move up");
@@ -450,7 +454,8 @@ var actions;
     actions.stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
     actions.stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
     actions.repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
-    actions.ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is color1", true);
+    actions.ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is red", true);
+    actions.ifColor2 = new robotcode.Action("ifColor2", "if the state of the tile is green", true);
 
     robotcode.mapActions[actions.up.name] = move(0, -1, 180);
     robotcode.mapActions[actions.down.name] = move(0, 1, 0);
@@ -458,8 +463,9 @@ var actions;
     robotcode.mapActions[actions.right.name] = move(1, 0, -90);
     robotcode.mapActions[actions.stateColor1.name] = state("color1");
     robotcode.mapActions[actions.stateColor2.name] = state("color2");
-    robotcode.mapActions[actions.repeat3Times.name] = repeat;
-    robotcode.mapActions[actions.ifColor1.name] = ifAction;
+    robotcode.mapActions[actions.repeat3Times.name] = repeat(3);
+    robotcode.mapActions[actions.ifColor1.name] = ifState("color1");
+    robotcode.mapActions[actions.ifColor2.name] = ifState("color2");
 })(actions || (actions = {}));
 /// <reference path="robotcode.ts" />
 /// <reference path="actions.ts" />
@@ -495,7 +501,6 @@ var range = function (begin, end) {
     for (var i = 0; i < delta; i++) {
         result.push(i + offset);
     }
-    ;
     return result;
 };
 
@@ -522,6 +527,7 @@ var availableActions = new robotcode.AvailableActions([
     actions.stateColor1,
     actions.stateColor2,
     actions.ifColor1,
+    actions.ifColor2,
     actions.repeat3Times
 ]);
 

@@ -61,35 +61,37 @@ module actions {
 		}
 	};
 
-	var repeat = function(context:robotcode.Context, callback:()=>void) {
-		var repeatTime:number = context.get("repeatTime");
-		if (isNaN(repeatTime)) {
-			repeatTime = 0;
-		}
-		console.log("repeatTime: " + repeatTime);
-		var canContinue = repeatTime < 3
-		if (canContinue) {
-			repeatTime++;
-			context.set("repeatTime", repeatTime);
-		} else {
-			context.set("repeatTime", null);
-		}
-		context.set("executeChildren", canContinue);
-		context.set("redo", canContinue);
+	var repeat = function(count:number) {
+		return function(context:robotcode.Context, callback:()=>void) {
+			var repeatTime:number = context.get("repeatTime");
+			if (isNaN(repeatTime)) {
+				repeatTime = 0;
+			}
+			console.log("repeatTime: " + repeatTime);
+			var canContinue = repeatTime < count
+			if (canContinue) {
+				repeatTime++;
+				context.set("repeatTime", repeatTime);
+			} else {
+				context.set("repeatTime", null);
+			}
+			context.executeChildren = canContinue;
+			context.redo = canContinue;
 
-		setTimeout(callback, 500);
+			setTimeout(callback, 500);
+		}
 	}
 
-	var ifAction = function(context:robotcode.Context, callback:()=>void) {
-		var world = <robotcode.World> context.get("world");
-		var robot = world.robot;
-		var grid = world.grid;
-		var state = getCellState(grid, robot.x, robot.y);
-		if (state == "color1") {
-			context.set("executeChildren", true);
-		}
+	var ifState = function (state:string) {
+		return (context:robotcode.Context, callback:()=>void) => {
+			var world = <robotcode.World> context.get("world");
+			var robot = world.robot;
+			var grid = world.grid;
+			var cellState = getCellState(grid, robot.x, robot.y);
+			context.executeChildren = state == cellState;
 
-		setTimeout(callback, 500);
+			setTimeout(callback, 500);
+		}
 	}
 
 	export var up = new robotcode.Action("up", "move up");
@@ -99,7 +101,8 @@ module actions {
 	export var stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
 	export var stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
 	export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
-	export var ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is color1", true);
+	export var ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is red", true);
+	export var ifColor2 = new robotcode.Action("ifColor2", "if the state of the tile is green", true);
 
 	robotcode.mapActions[up.name] = move(0, -1, 180);
 	robotcode.mapActions[down.name] = move(0, 1, 0);
@@ -107,6 +110,7 @@ module actions {
 	robotcode.mapActions[right.name] = move(1, 0, -90);
 	robotcode.mapActions[stateColor1.name] = state("color1");
 	robotcode.mapActions[stateColor2.name] = state("color2");
-	robotcode.mapActions[repeat3Times.name] = repeat;
-	robotcode.mapActions[ifColor1.name] = ifAction;
+	robotcode.mapActions[repeat3Times.name] = repeat(3);
+	robotcode.mapActions[ifColor1.name] = ifState("color1");
+	robotcode.mapActions[ifColor2.name] = ifState("color2");
 }

@@ -35,7 +35,7 @@ var range = function(begin:number, end:number) {
     var result = [];
     for (var i = 0; i < delta; i++) {
         result.push(i + offset);
-    };
+    }
     return result;
 }
 
@@ -63,6 +63,7 @@ var availableActions = new robotcode.AvailableActions(
 		actions.stateColor1,
 		actions.stateColor2,
 		actions.ifColor1,
+		actions.ifColor2,
 		actions.repeat3Times,
 	]);
 

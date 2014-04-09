@@ -54,6 +54,11 @@ module robotcode {
 	export class Context {
 		private map:{[key:string]:any} = {};
 		parent:Context;
+		redo:boolean;
+		executeChildren:boolean;
+		index:number;
+		container:ActionContainer;
+		instance:ActionInstance;
 		set(key:string, value:any) {
 			this.map[key] = value;
 		}
@@ -108,9 +113,9 @@ module robotcode {
 		scriptContainer:ActionContainer = new ActionContainer();
 		currentContainer:ActionContainer = this.scriptContainer;
 		constructor(world:World) {
-			this.initContext();
 			this.control = new Control();
 			this.load();
+			this.initContext();
 		}
 
 		load() {
@@ -124,8 +129,10 @@ module robotcode {
 		initContext() {
 			var context = new Context();
 			context.set("world", world);
-			context.set("container", this.scriptContainer);
-			context.set("index", -1);
+			context.container = this.scriptContainer;
+			context.index = -1;
+			context.executeChildren = false;
+			context.redo = false;
 			this.context = context;
 		}
 
@@ -178,22 +185,22 @@ module robotcode {
 		}
 		private next = () => {
 			if (!this.isPaused) {
-				var executeChildren:boolean = this.context.get("executeChildren");
+				var executeChildren:boolean = this.context.executeChildren;
 				if (executeChildren) {
 					this.enterContainer(this.currentActionInstance.container);
 				}
-				var redo:boolean = this.context.get("redo");
-				var index:number = this.context.get("index");
-				var container:ActionContainer = this.context.get("container");
+				var redo:boolean = this.context.redo;
+				var index:number = this.context.index;
+				var container:ActionContainer = this.context.container;
 				if (!redo) {
 					index++;
-					this.context.set("index", index);
+					this.context.index = index;
 				}
 				if (index >= 0 && index < container.actions.length) {
 					if (this.currentActionInstance) this.currentActionInstance.executing = false;
 					this.currentActionInstance = container.actions[index];
 					this.currentActionInstance.executing = true;
-					this.context.set("instance", this.currentActionInstance);
+					this.context.instance = this.currentActionInstance;
 					mapActions[this.currentActionInstance.action.name](
 						this.context, 
 						this.next);
@@ -209,10 +216,10 @@ module robotcode {
 		}
 		private enterContainer(container:ActionContainer) {
 			var context = new Context();
-			context.set("index", -1);
-			context.set("container", container);
-			context.set("executeChildren", false);
-			context.set("redo", false);
+			context.index = -1;
+			context.container = container;
+			context.executeChildren = false;
+			context.redo = false;
 			context.parent = this.context;
 			this.context = context;
 		}
@@ -220,7 +227,7 @@ module robotcode {
 		private exitContainer() {
 			if (this.context.parent) {
 				this.context = this.context.parent;
-				this.context.set("executeChildren", false);
+				this.context.executeChildren = false;
 			}
 		}
 
