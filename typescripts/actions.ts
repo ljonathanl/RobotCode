@@ -100,7 +100,9 @@ module actions {
 	export var right = new robotcode.Action("right", "move right");
 	export var stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
 	export var stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
+	export var repeat2Times = new robotcode.Action("repeat2Times", "repeat 2 times", true);
 	export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
+	export var repeat4Times = new robotcode.Action("repeat4Times", "repeat 4 times", true);
 	export var ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is red", true);
 	export var ifColor2 = new robotcode.Action("ifColor2", "if the state of the tile is green", true);
 
@@ -110,7 +112,9 @@ module actions {
 	robotcode.mapActions[right.name] = move(1, 0, -90);
 	robotcode.mapActions[stateColor1.name] = state("color1");
 	robotcode.mapActions[stateColor2.name] = state("color2");
+	robotcode.mapActions[repeat2Times.name] = repeat(2);
 	robotcode.mapActions[repeat3Times.name] = repeat(3);
+	robotcode.mapActions[repeat4Times.name] = repeat(4);
 	robotcode.mapActions[ifColor1.name] = ifState("color1");
 	robotcode.mapActions[ifColor2.name] = ifState("color2");
 }

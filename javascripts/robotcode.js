@@ -453,7 +453,9 @@ var actions;
     actions.right = new robotcode.Action("right", "move right");
     actions.stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
     actions.stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
+    actions.repeat2Times = new robotcode.Action("repeat2Times", "repeat 2 times", true);
     actions.repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
+    actions.repeat4Times = new robotcode.Action("repeat4Times", "repeat 4 times", true);
     actions.ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is red", true);
     actions.ifColor2 = new robotcode.Action("ifColor2", "if the state of the tile is green", true);
 
@@ -463,7 +465,9 @@ var actions;
     robotcode.mapActions[actions.right.name] = move(1, 0, -90);
     robotcode.mapActions[actions.stateColor1.name] = state("color1");
     robotcode.mapActions[actions.stateColor2.name] = state("color2");
+    robotcode.mapActions[actions.repeat2Times.name] = repeat(2);
     robotcode.mapActions[actions.repeat3Times.name] = repeat(3);
+    robotcode.mapActions[actions.repeat4Times.name] = repeat(4);
     robotcode.mapActions[actions.ifColor1.name] = ifState("color1");
     robotcode.mapActions[actions.ifColor2.name] = ifState("color2");
 })(actions || (actions = {}));
@@ -528,7 +532,9 @@ var availableActions = new robotcode.AvailableActions([
     actions.stateColor2,
     actions.ifColor1,
     actions.ifColor2,
-    actions.repeat3Times
+    actions.repeat2Times,
+    actions.repeat3Times,
+    actions.repeat4Times
 ]);
 
 var initClasses = function (i, j) {

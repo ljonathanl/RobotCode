@@ -14,7 +14,7 @@
 .clear, .garbage,
 .up, .down, .left, .right,
 .stateColor1, .stateColor2,
-.repeat3Times,
+.repeat2Times, .repeat3Times, .repeat4Times,
 .ifColor1, .ifColor2 {
 	font-family: 'icomoon';
 	speak: none;
@@ -171,7 +171,7 @@ table {
 	width: 80px;
 	height: 80px;
 	color: #ecf0f1;
-	background-color: #7f8c8d;
+	background-color: #d35400;
 	border: none;
 }
 
@@ -179,8 +179,8 @@ table {
 	box-sizing: border-box; 
 	min-width: 80px;
 	min-height: 80px;
-	background-color: rgba(236, 240, 241, 0.3);
-	padding: 4px;
+	background-color: rgba(236, 240, 241, 0.4);
+	padding: 0px 4px 4px 4px;
 	display: flex;
 	align-items: baseline;
 }
@@ -217,8 +217,32 @@ table {
 	content: "\e600";
 }
 
-.repeat3Times:before {
+.repeat2Times, .repeat3Times, .repeat4Times {
+	position: relative;
+	background-color: #8e44ad;
+}
+
+.repeat2Times:before, .repeat3Times:before, .repeat4Times:before {
 	content: "\e606";
+}
+
+.repeat2Times:after, .repeat3Times:after, .repeat4Times:after {
+	position: absolute;
+	top: 0px;
+	right: 5px;
+	font-size: 20px;
+}
+
+.repeat2Times:after {
+	content: "2";
+}
+
+.repeat3Times:after {
+	content: "3";
+}
+
+.repeat4Times:after {
+	content: "4";
 }
 
 .ifColor1 {
@@ -234,7 +258,7 @@ table {
 }
 
 .script {
-	background-color: #2c3e50;
+	background-color: #7f8c8d;
 	margin-left: 20px;
 	margin-right: 20px;
 	width: 85%;
@@ -242,6 +266,7 @@ table {
 	align-items: baseline;
 	box-sizing: border-box;
 	padding: 4px;
+	box-shadow: 10px 10px 0px #2c3e50; 
 }
 
 .instance {
@@ -271,6 +296,7 @@ table {
 
 .play {
 	background-color: #16a085;
+	box-shadow: 10px 10px 0px #2c3e50; 
 }
 
 .play:before {
@@ -283,6 +309,7 @@ table {
 
 .stop {
 	background-color: #c0392b;
+	box-shadow: 10px 10px 0px #2c3e50; 
 }
 
 .stop:before {
@@ -319,7 +346,8 @@ table {
 }
 
 .garbage {
-	background-color: #7f8c8d; 
+	background-color: #7f8c8d;
+	box-shadow: 10px 10px 0px #2c3e50;  
 }
 
 .garbage:before {

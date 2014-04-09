@@ -64,7 +64,9 @@ var availableActions = new robotcode.AvailableActions(
 		actions.stateColor2,
 		actions.ifColor1,
 		actions.ifColor2,
+		actions.repeat2Times,
 		actions.repeat3Times,
+		actions.repeat4Times,
 	]);
 
 var initClasses = function(i:number, j:number):string {
