@@ -126,15 +126,13 @@ table {
 	border-left: 2px solid #ecf0f1;
 }*/
 
-
-
 .cell:after {
 	content: " ";  
 	position: absolute;
-	top: 5px;
-	left: 5px;  
-	width: 65px;  
-	height: 65px;  
+	top: 10px;
+	left: 10px;  
+	width: 60px;  
+	height: 60px;  
 	z-index: -10;
 	box-sizing: border-box;
 	background-color: #2c3e50;    
@@ -180,8 +178,9 @@ button:hover {
 	min-width: 80px;
 	min-height: 80px;
 	background-color: rgba(236, 240, 241, 0.4);
-	padding: 0px 4px 4px 4px;
+	padding: 4px 4px 4px 4px;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: baseline;
 }
 
@@ -263,6 +262,7 @@ button:hover {
 	margin-right: 20px;
 	width: 85%;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: baseline;
 	box-sizing: border-box;
 	padding: 4px;
@@ -270,7 +270,7 @@ button:hover {
 }
 
 .instance {
-	margin: 0 4px;
+	margin: 4px 4px;
 	display: flex;
 }
 
