@@ -135,7 +135,7 @@ module robotcode {
 		}
 
 		load() {
-			this.scriptContainer = JSON.parse(localStorage.getItem("script")) || new ActionContainer();
+			this.scriptContainer = (localStorage && JSON.parse(localStorage.getItem("script"))) || new ActionContainer();
 		}
 
 		save() {

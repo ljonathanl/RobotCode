@@ -283,7 +283,7 @@ var robotcode;
             this.initContext();
         }
         Script.prototype.load = function () {
-            this.scriptContainer = JSON.parse(localStorage.getItem("script")) || new ActionContainer();
+            this.scriptContainer = (localStorage && JSON.parse(localStorage.getItem("script"))) || new ActionContainer();
         };
 
         Script.prototype.save = function () {
