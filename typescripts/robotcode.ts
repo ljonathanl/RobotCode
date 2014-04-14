@@ -7,7 +7,12 @@ module robotcode {
 		robot: {
 			x: number;
 			y: number
-		}
+		};
+		actions: string[];
+	}
+
+	export interface ActionExecution {
+		(context:Context, callback:()=>void):void
 	}
 
 	export class Cell {
@@ -33,10 +38,14 @@ module robotcode {
 		constructor(public name:string, public description:string, public container = false){}
 	};
 
+	export class ActionDefinition {
+		constructor(public name:string, public description:string, public container = false){}
+	};
+
 	export class ActionInstance {
 		executing:boolean = false;
 		container:ActionContainer;
-		constructor(public action:Action){}
+		constructor(public action:ActionDefinition){}
 	};
 
 	export class ActionContainer {
@@ -48,7 +57,7 @@ module robotcode {
 	};
 
 	export class AvailableActions {
-		constructor(public actions:Action[]){}
+		constructor(public actions:ActionDefinition[]){}
 	};
 
 	export class Context {
@@ -71,9 +80,16 @@ module robotcode {
 			}
 			return map[key];
 		}
-	}	
+	}
+
+
+	export var actions:{[key:string]:ActionDefinition} = {};
 
 	export var mapActions:{[key:string]:(context:Context, callback:()=>void)=>void} = {};
+
+	export function createAction() {
+
+	}
 
 	export function createWorld(worldValue:WorldValue):World {
 		var grid = new Grid();
@@ -96,7 +112,7 @@ module robotcode {
 		return new World(robot, grid);
 	}
 
-	function createActionInstance(action:Action) {
+	function createActionInstance(action:ActionDefinition) {
 		var actionInstance = new ActionInstance(action);
 		if (action.container) {
 			actionInstance.container = new ActionContainer();
@@ -136,7 +152,7 @@ module robotcode {
 			this.context = context;
 		}
 
-		create(action:Action) {
+		create(action:ActionDefinition) {
 			var actionInstance = createActionInstance(action);
 			this.scriptContainer.actions.push(actionInstance);
 			this.save();

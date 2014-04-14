@@ -94,17 +94,17 @@ module actions {
 		}
 	}
 
-	export var up = new robotcode.Action("up", "move up");
-	export var down = new robotcode.Action("down", "move down");
-	export var left = new robotcode.Action("left", "move left");
-	export var right = new robotcode.Action("right", "move right");
-	export var stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
-	export var stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
-	export var repeat2Times = new robotcode.Action("repeat2Times", "repeat 2 times", true);
-	export var repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
-	export var repeat4Times = new robotcode.Action("repeat4Times", "repeat 4 times", true);
-	export var ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is red", true);
-	export var ifColor2 = new robotcode.Action("ifColor2", "if the state of the tile is green", true);
+	export var up = new robotcode.ActionDefinition("up", "move up");
+	export var down = new robotcode.ActionDefinition("down", "move down");
+	export var left = new robotcode.ActionDefinition("left", "move left");
+	export var right = new robotcode.ActionDefinition("right", "move right");
+	export var stateColor1 = new robotcode.ActionDefinition("stateColor1", "state tile in color1");
+	export var stateColor2 = new robotcode.ActionDefinition("stateColor2", "state tile in color2");
+	export var repeat2Times = new robotcode.ActionDefinition("repeat2Times", "repeat 2 times", true);
+	export var repeat3Times = new robotcode.ActionDefinition("repeat3Times", "repeat 3 times", true);
+	export var repeat4Times = new robotcode.ActionDefinition("repeat4Times", "repeat 4 times", true);
+	export var ifColor1 = new robotcode.ActionDefinition("ifColor1", "if the state of the tile is red", true);
+	export var ifColor2 = new robotcode.ActionDefinition("ifColor2", "if the state of the tile is green", true);
 
 	robotcode.mapActions[up.name] = move(0, -1, 180);
 	robotcode.mapActions[down.name] = move(0, 1, 0);

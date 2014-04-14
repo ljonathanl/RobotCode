@@ -4,7 +4,7 @@
 
 declare var Vue:any;
 declare var Sortable:any;
-var worldValue = {
+var worldValue:robotcode.WorldValue = {
 	states: 
 	{ 
 		"H": "hole",
@@ -25,7 +25,8 @@ var worldValue = {
 	robot: {
 		x: 4,
 		y: 4
-	}
+	},
+	actions: []
 }
 
 var range = function(begin:number, end:number) {
@@ -177,7 +178,7 @@ var availableActionsView = new Vue({
 	el: ".availableActions",
 	data: availableActions,
 	methods: {
-		add: (action:robotcode.Action)=>{
+		add: (action:robotcode.ActionDefinition)=>{
 			script.create(action);
 		},
 	}

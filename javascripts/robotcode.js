@@ -135,6 +135,18 @@ var robotcode;
     robotcode.Action = Action;
     ;
 
+    var ActionDefinition = (function () {
+        function ActionDefinition(name, description, container) {
+            if (typeof container === "undefined") { container = false; }
+            this.name = name;
+            this.description = description;
+            this.container = container;
+        }
+        return ActionDefinition;
+    })();
+    robotcode.ActionDefinition = ActionDefinition;
+    ;
+
     var ActionInstance = (function () {
         function ActionInstance(action) {
             this.action = action;
@@ -191,7 +203,13 @@ var robotcode;
     })();
     robotcode.Context = Context;
 
+    robotcode.actions = {};
+
     robotcode.mapActions = {};
+
+    function createAction() {
+    }
+    robotcode.createAction = createAction;
 
     function createWorld(worldValue) {
         var grid = new Grid();
@@ -447,17 +465,17 @@ var actions;
         };
     };
 
-    actions.up = new robotcode.Action("up", "move up");
-    actions.down = new robotcode.Action("down", "move down");
-    actions.left = new robotcode.Action("left", "move left");
-    actions.right = new robotcode.Action("right", "move right");
-    actions.stateColor1 = new robotcode.Action("stateColor1", "state tile in color1");
-    actions.stateColor2 = new robotcode.Action("stateColor2", "state tile in color2");
-    actions.repeat2Times = new robotcode.Action("repeat2Times", "repeat 2 times", true);
-    actions.repeat3Times = new robotcode.Action("repeat3Times", "repeat 3 times", true);
-    actions.repeat4Times = new robotcode.Action("repeat4Times", "repeat 4 times", true);
-    actions.ifColor1 = new robotcode.Action("ifColor1", "if the state of the tile is red", true);
-    actions.ifColor2 = new robotcode.Action("ifColor2", "if the state of the tile is green", true);
+    actions.up = new robotcode.ActionDefinition("up", "move up");
+    actions.down = new robotcode.ActionDefinition("down", "move down");
+    actions.left = new robotcode.ActionDefinition("left", "move left");
+    actions.right = new robotcode.ActionDefinition("right", "move right");
+    actions.stateColor1 = new robotcode.ActionDefinition("stateColor1", "state tile in color1");
+    actions.stateColor2 = new robotcode.ActionDefinition("stateColor2", "state tile in color2");
+    actions.repeat2Times = new robotcode.ActionDefinition("repeat2Times", "repeat 2 times", true);
+    actions.repeat3Times = new robotcode.ActionDefinition("repeat3Times", "repeat 3 times", true);
+    actions.repeat4Times = new robotcode.ActionDefinition("repeat4Times", "repeat 4 times", true);
+    actions.ifColor1 = new robotcode.ActionDefinition("ifColor1", "if the state of the tile is red", true);
+    actions.ifColor2 = new robotcode.ActionDefinition("ifColor2", "if the state of the tile is green", true);
 
     robotcode.mapActions[actions.up.name] = move(0, -1, 180);
     robotcode.mapActions[actions.down.name] = move(0, 1, 0);
@@ -494,7 +512,8 @@ var worldValue = {
     robot: {
         x: 4,
         y: 4
-    }
+    },
+    actions: []
 };
 
 var range = function (begin, end) {

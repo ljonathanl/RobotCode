@@ -81,7 +81,8 @@ table {
 	width: 60px;
 	height: 60px;
 	border: 2px dashed #ecf0f1;
-	box-sizing: border-box; 
+	box-sizing: border-box;
+	box-shadow: 10px 10px 0 0px #2c3e50; 
 }
 
 .hole {
@@ -89,6 +90,7 @@ table {
 	box-shadow:inset 30px 30px 0 4px #d35400;*/
 	background: none;
 	border: none;
+	box-shadow: none; 
 }
 
 .none {
@@ -118,41 +120,6 @@ table {
 .hole-left {
 	border-left: 2px solid #ecf0f1;
 }
-
-/*.cell-top {
-	border-top: 2px solid #ecf0f1;
-}
-
-.cell-bottom {
-	border-bottom: 2px solid #ecf0f1;
-}
-
-.cell-right {
-	border-right: 2px solid #ecf0f1;
-}
-
-.cell-left {
-	border-left: 2px solid #ecf0f1;
-}*/
-
-.cell:after {
-	content: " ";  
-	position: absolute;
-	top: 10px;
-	left: 10px;  
-	width: 60px;  
-	height: 60px;  
-	z-index: -10;
-	box-sizing: border-box;
-	background-color: #2c3e50;    
-	/*box-shadow: 5px 10px 0 5px #d35400;*/
-}
-
-.hole:after {
-	content: none;  
-	/*box-shadow: 5px 10px 0 5px #d35400;*/
-}
-
 
 .robot {
 	position: absolute;
